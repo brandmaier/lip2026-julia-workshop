@@ -1,0 +1,99 @@
+---
+title: "SEM in Julia using StructuralEquationModels.jl"
+author: "Andreas M. Brandmaier, Maximilian Ernst, & Aaron Peikert"
+format: revealjs
+editor: visual
+---
+
+## Julia
+
+![](img/julia-logo.svg)
+
+## About Julia
+
+**Julia** is a relatively young (2012) programming language designed to be particularly effective for scientific workflows - the developers specifically call out Fortran and MATLAB as predecessors in this area.
+
+Compared to these, Julia has much of the dynamic and interactive expressiveness of languages such as *Python*, whilst leveraging just-in-time compilation and specialization to allow performance approaching (and sometimes better than) high-performance compiled languages such as *C*, *C++*, *Modern Fortran* and *Rust*.
+
+Sources: <https://juliahep.github.io/JuliaHEP-2023/intro.html> , <https://physi.uni-heidelberg.de/~reygers/lectures/2024/julia/julia-01-intro.slides.html>
+
+## Why Julia
+
+Solves the dual-language problem. From ThinkJulia.jl:
+
+*Julia is a unique programming language because it solves the so-called two languages problem. No other programming language is needed to write high-performance code. This does not mean it happens automatically. It is the responsibility of the programmer to optimize the code that forms a bottleneck but this can done in Julia itself.*
+
+-   Open source and free: The whole language and all packages!
+
+-   Easy to get started
+
+-   Many third party libraries
+
+    Source: <https://physi.uni-heidelberg.de/~reygers/lectures/2024/julia/julia-01-intro.slides.html>
+
+## Some Nice Features
+
+-   Easy to write yet fast
+
+-   Full unicode support, e.g., this is valid code: ![](img/unicode.png)
+
+-   excellent package manager with powerful libraries
+
+-   Juptyer notebooks (for dynamic documents and reproducible research)
+
+-   A variety of modern programming paradigms that makes Julia code highly efficient, elegant, and extensible (e.g., multiple dispatch, dynamic typing, functional chaining of methods (like pipes in R), etc..)
+
+## Where to start?
+
+Some pointers to practical resources:
+
+-   The Julia Cheat Sheet <https://cheatsheets.quantecon.org/julia-cheatsheet.html>
+
+-   The "official" Cheat Sheet: <https://cheatsheet.juliadocs.org/>
+
+-   Exercises: 100 Julia exercises with solutions: <https://pythonjulia.blogspot.com/2022/03/100-julia-exercises-with-solutions.html>
+
+-   A set of introductory slides: <https://physi.uni-heidelberg.de/~reygers/lectures/2024/julia/>
+
+## Basic Syntax
+
+Should look familiar to R and python users
+
+```{julia}
+a = 1.0
+a + 10
+α = 1 # type \alpha and hit TAB
+name = "Julia"
+```
+
+(here, we already see dynamic typecasting in action)
+
+## Types
+
+```{julia}
+a::Int = 1
+b::UInt = 2
+c::UInt16 = 3
+
+# Should fail:
+a = a + 0.1
+b = -1
+```
+
+## Vectors
+
+```{julia}
+x = [1, 2, 3, 4]
+x[1]
+x[end]
+
+y = 1:10
+y
+collect(y)
+```
+
+## Data Frames
+
+```{julia}
+
+```
