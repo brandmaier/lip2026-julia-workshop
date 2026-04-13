@@ -1,5 +1,6 @@
 ---
 title: "SEM in Julia using StructuralEquationModels.jl"
+subtitle: "Julia's Look & Feel"
 author: "Andreas M. Brandmaier, Maximilian Ernst, & Aaron Peikert"
 format: revealjs
 editor: visual
@@ -71,7 +72,7 @@ Some pointers to practical resources:
 
 # Look and Feel
 
-In the following, we will go through some basic commands to get the look&feel of Julia
+Goal of the first part: Get the look&feel of Julia
 
 ## Basic Syntax
 
@@ -176,6 +177,15 @@ x[end]
 y = 1:10
 y
 collect(y)
+```
+
+## Installing Packages
+
+For more functionality, install packages from the registry:
+
+```{julia}
+using Pkg
+Pkg.add(["StructuralEquationModels", "CSV", "Distributions", "DataFrames", "StableRNGs"])
 ```
 
 ## Data Frames

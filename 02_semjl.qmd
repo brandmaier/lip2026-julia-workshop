@@ -1,0 +1,116 @@
+---
+title: "Untitled"
+format: revealjs
+editor: visual
+---
+
+## Quarto
+
+Goal of the second part: Get familiar with "StructuralEquationModel.jl” (Ernst, Stukalov, Brandmaier, & Peikert, Submitted)
+
+## Load the package
+
+This may take some time on first loading:
+
+```{julia}
+using StructuralEquationModels
+```
+
+## Define variables
+
+Define symbols for all observed and all latent variables:
+
+```{julia}
+obs = [:y1, :y2, :y3, :y4, :y5]
+lat = [:i, :s]
+```
+
+## Define a Model
+
+Regression (with free parameter):
+
+```{a → b #type \rightarrow or \leftarrow}
+```
+
+Covariance (with free parameter)
+
+```         
+a ↔ b #type \\leftrightarrow
+```
+
+Variance
+
+```         
+a ↔ a
+```
+
+## One-to-one and many-to-many mappings
+
+```         
+[a b] → [c d]
+```
+
+evaluates to `a → c, b → d`.
+
+```         
+[a b] ⇒ [c d]
+```
+
+is equivalent to saying `a → c, a → d, b → c, b → d`.
+
+## Define a graph
+
+```{julia}
+graph = @StenoGraph begin
+
+   ...
+   
+end
+```
+
+## Define a graph
+
+```{julia}
+
+
+graph = @StenoGraph begin
+    # Intercept factor: all loadings fixed to 1
+    i → fixed(1)*y4 + fixed(1)*y7 + fixed(1)*y8 + fixed(1)*y10
+
+    # Slope factor: linear time scores
+    s → fixed(0)*y4 + fixed(3)*y7 + fixed(4)*y8 + fixed(6)*y10
+
+    # Residual variances (free) and latent (co)variances (free)
+    _(obs) ↔ _(obs)     # variances for observed variables
+    _(lat) ⇔ _(lat)     # variances + covariance for latent factors
+
+    # Latent means (estimate μ_i and μ_s); 
+    # observed means fixed to 0 by omission
+    Symbol(1) → i + s
+end
+```
+
+## Parameter Table
+
+```{julia}
+partable = ParameterTable(
+    graph,
+    latent_vars   = lat,
+    observed_vars = obs
+)
+```
+
+## Model
+
+```{julia modelsem, eval=FALSE}
+model = Sem(
+    specification = partable,
+    data          = data
+)
+```
+
+## Fit
+
+```{julia fitmodel, eval=FALSE}
+fitted = fit(model)
+``
