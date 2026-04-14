@@ -14,16 +14,26 @@ link = "https://github.com/brandmaier/lip2026-julia-workshop"
 generate_svg(qr_code(link), here::here("img/", "qr_talk.svg"), foreground = secondary_color, background = primary_color, show = FALSE)
 ```
 
+## Ask Questions anytime
+
+## ChatGPT-Unterstützung
+
+Frag Chatty:
+
+<https://chatgpt.com/share/69ddef00-a35c-8387-bd7f-5ad6b333e359>
+
 ## Julia
 
-:::: columns
-
-::: {.column width="50%"}
+::::: columns
+:::: {.column width="50%"}
 ![](img/julia-logo.svg)
+::::
+
 
 ::: {.column width="50%"}
 ![](img/qr_talk.svg)
-
+:::
+:::::
 ## About Julia
 
 **Julia** is a relatively young (2012) programming language designed to be particularly effective for scientific workflows - the developers specifically call out Fortran and MATLAB as predecessors in this area.
@@ -254,6 +264,7 @@ plot(df.age, df.life_satisfaction)
 ```
 
 Add to the plot using the modification operator
+
 ```{julia}
 plot!(df.age, df.age)
 ```
@@ -264,7 +275,7 @@ plot!(df.age, df.age)
 2.  Inspect the loaded data
 3.  Compute the mean of the first variable (using `mean()` from package Statistics)
 4.  Bonus: How to compute the mean across all columns?
-5. Plot a scatter plot of the first two columns
+5.  Plot a scatter plot of the first two columns
 
 ## Solution
 
@@ -293,3 +304,4 @@ plot(data[:,1], data[:,2])
 ```
 
 # Move on to PART II of the workshop
+

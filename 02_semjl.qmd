@@ -113,4 +113,22 @@ model = Sem(
 
 ```{julia fitmodel, eval=FALSE}
 fitted = fit(model)
-``
+```
+
+## Exercise
+
+
+This exercise sheet is targeted at social scientists who are interested in modeling change over time in the Julia programming language using the package StructuralEquationModels.jl.
+
+Download this at: 
+
+## Goals
+
+Your tasks:
+
+- Set up and fit a linear latent growth curve model (LGCM) in Julia using StructuralEquationModels.jl.
+- Modify a model to accommodate unequal time intervals.
+- Diagnose and fix an error in the model specification.
+- Compare nested models via likelihood ratio ($\chi^2$) tests.
+- Interpret key growth parameters (means, variances, covariances).
+- Empirically test a model including a retest effect
