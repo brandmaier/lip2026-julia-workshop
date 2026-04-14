@@ -1,18 +1,48 @@
 ---
-title: "Untitled"
-format: revealjs
-editor: visual
+title: "SEM in Julia using StructuralEquationModels.jl"
+subtitle: "Part II - SEMs in Julia"
+author: "Andreas M. Brandmaier, Maximilian Ernst, & Aaron Peikert"
+
+format: 
+  revealjs:
+    mermaid:
+      theme: neutral
+      footer: "LIP Retreat Döllnsee, April 2026"
+      highlight-style: a11y
+      slide-number: true
+      preview-links: true
+      embed-resources: true
 ---
+
+```{r setup}
+library(JuliaCall)
+julia_setup(JULIA_HOME = 'C:\\Users\\andreas.brandmaier\\AppData\\Local\\Programs\\Julia-1.11.7\\bin')
+```
 
 ## Quarto
 
 Goal of the second part: Get familiar with "StructuralEquationModel.jl” (Ernst, Stukalov, Brandmaier, & Peikert, Submitted)
 
+## Linear Latent Growth Curve Model
+
+
+::::: columns
+::: {.column width="50%"}
+![](img/stepbystep/lgcm-stepbystep-V2-1.pdf)Step-By-Step
+
+
+:::
+
+::: {.column width="50%"}
+![](img/stepbystep/sim1.png)
+:::
+:::::
+
 ## Load the package
 
 This may take some time on first loading:
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 using StructuralEquationModels
 ```
 
@@ -20,7 +50,7 @@ using StructuralEquationModels
 
 Define symbols for all observed and all latent variables:
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 obs = [:y1, :y2, :y3, :y4, :y5]
 lat = [:i, :s]
 ```
@@ -29,7 +59,8 @@ lat = [:i, :s]
 
 Regression (with free parameter):
 
-```{a → b #type \rightarrow or \leftarrow}
+```{julia eval=FALSE}
+{a → b #type \rightarrow or \leftarrow}
 ```
 
 Covariance (with free parameter)
@@ -60,7 +91,7 @@ is equivalent to saying `a → c, a → d, b → c, b → d`.
 
 ## Define a graph
 
-```{julia}
+```{julia empty, eval=FALSE}
 graph = @StenoGraph begin
 
    ...
@@ -70,7 +101,7 @@ end
 
 ## Define a graph
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 
 
 graph = @StenoGraph begin
@@ -78,7 +109,7 @@ graph = @StenoGraph begin
     i → fixed(1)*y4 + fixed(1)*y7 + fixed(1)*y8 + fixed(1)*y10
 
     # Slope factor: linear time scores
-    s → fixed(0)*y4 + fixed(3)*y7 + fixed(4)*y8 + fixed(6)*y10
+    s → fixed(0)*y4 + fixed(1)*y7 + fixed(2)*y8 + fixed(3)*y10
 
     # Residual variances (free) and latent (co)variances (free)
     _(obs) ↔ _(obs)     # variances for observed variables
@@ -115,20 +146,45 @@ model = Sem(
 fitted = fit(model)
 ```
 
-## Exercise
+## Obtaining Fit Measures
 
+```{julia fitmeasures, eval=FALSE}
+fit_measures(fitted)
+```
+
+## Getting Parameters
+
+```{julia updatepar, eval=FALSE}
+update_estimate!(partable, fitted)
+details(partable)
+```
+
+## Comparing two models
+
+```{julia lrt, eval=FALSE}
+
+Δdev = minus2ll(fitted_h0) - minus2ll(fitted)
+Δdf  = dof(fitted_h0) - dof(fitted)
+
+using Distributions
+p = 1 - cdf(Chisq(Δdf), Δdev)  # p-value for the LRT
+```
+
+## Exercise
 
 This exercise sheet is targeted at social scientists who are interested in modeling change over time in the Julia programming language using the package StructuralEquationModels.jl.
 
-Download this at: 
+Download the exercise sheet: <https://github.com/brandmaier/lip2026-julia-workshop/blob/main/exercises/exercise_sheet1.pdf>
+
+Download the data file: <https://github.com/brandmaier/lip2026-julia-workshop/blob/main/exercises/exercise_sheet1.csv>
 
 ## Goals
 
 Your tasks:
 
-- Set up and fit a linear latent growth curve model (LGCM) in Julia using StructuralEquationModels.jl.
-- Modify a model to accommodate unequal time intervals.
-- Diagnose and fix an error in the model specification.
-- Compare nested models via likelihood ratio ($\chi^2$) tests.
-- Interpret key growth parameters (means, variances, covariances).
-- Empirically test a model including a retest effect
+-   Set up and fit a linear latent growth curve model (LGCM) in Julia using StructuralEquationModels.jl.
+-   Modify a model to accommodate unequal time intervals.
+-   Diagnose and fix an error in the model specification.
+-   Compare nested models via likelihood ratio ($\chi^2$) tests.
+-   Interpret key growth parameters (means, variances, covariances).
+-   Empirically test a model including a retest effect
