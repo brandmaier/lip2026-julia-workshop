@@ -15,8 +15,11 @@ format:
 ---
 
 ```{r setup}
-library(JuliaCall)
-julia_setup(JULIA_HOME = 'C:\\Users\\andreas.brandmaier\\AppData\\Local\\Programs\\Julia-1.11.7\\bin')
+# I am sorry - this is a terrible solution :( 
+if (Sys.info()[["user"]]=="andreas.brandmaier") {
+ library(JuliaCall)
+ julia_setup(JULIA_HOME = 'C:\\Users\\andreas.brandmaier\\AppData\\Local\\Programs\\Julia-1.11.7\\bin')
+}
 ```
 
 ```{julia eval=TRUE, echo=FALSE}
@@ -224,19 +227,19 @@ end
 ## Define a graph
 
 ```{julia defgraph, eval=TRUE, echo=TRUE}
-graph = \@StenoGraph begin
-\# Intercept factor: all loadings fixed to 1
-i → fixed(1)\*y1 + fixed(1)\*y2 + fixed(1)\*y3 + fixed(1)\*y4
+graph = @StenoGraph begin
+# Intercept factor: all loadings fixed to 1
+i → fixed(1)*y1 + fixed(1)*y2 + fixed(1)*y3 + fixed(1)*y4
 
-\# Slope factor: linear time scores
-s → fixed(0)\*y1 + fixed(1)\*y2 + fixed(2)\*y3 + fixed(3)\*y4
+# Slope factor: linear time scores
+s → fixed(0)*y1 + fixed(1)*y2 + fixed(2)*y3 + fixed(3)*y4
 
-\# Residual variances (free) and latent (co)variances (free)
-\_(obs) ↔ \_(obs) \# variances for observed variables
-\_(lat) ⇔ \_(lat) \# variances + covariance for latent factors
+# Residual variances (free) and latent (co)variances (free)
+_(obs) ↔ _(obs) # variances for observed variables
+_(lat) ⇔ _(lat) # variances + covariance for latent factors
 
-\# Latent means (estimate μ_i and μ_s);
-\# observed means fixed to 0 by omission
+# Latent means (estimate μ_i and μ_s);
+# observed means fixed to 0 by omission
 Symbol(1) → i + s
 end
 ```

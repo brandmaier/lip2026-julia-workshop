@@ -16,8 +16,11 @@ editor: visual
 ---
 
 ```{r setup}
-library(JuliaCall)
-julia_setup(JULIA_HOME = 'C:\\Users\\andreas.brandmaier\\AppData\\Local\\Programs\\Julia-1.11.7\\bin')
+# I am sorry - this is a terrible solution :( 
+if (Sys.info()[["user"]]=="andreas.brandmaier") {
+ library(JuliaCall)
+ julia_setup(JULIA_HOME = 'C:\\Users\\andreas.brandmaier\\AppData\\Local\\Programs\\Julia-1.11.7\\bin')
+}
 ```
 
 ```{r}
@@ -32,24 +35,20 @@ generate_svg(qr_code(link), here::here("img/", "qr_talk.svg"), foreground = seco
 
 ![](img/undraw_Engineering_team_a7n2.png)
 
-## ChatGPT-Unterstützung
-
-Frag Chatty:
-
-<https://chatgpt.com/share/69ddef00-a35c-8387-bd7f-5ad6b333e359>
-
 ## Julia
 
 ::::: columns
-:::: {.column width="50%"}
-![](img/julia-logo.svg)
-::::
+::: {.column width="50%"}
+Find Julia here: <https://julialang.org/>
 
+Workshop Materials: <https://github.com/brandmaier/lip2026-julia-workshop>
+:::
 
 ::: {.column width="50%"}
 ![](img/qr_talk.svg)
 :::
 :::::
+
 ## About Julia
 
 **Julia** is a relatively young (2012) programming language designed to be particularly effective for scientific workflows - the developers specifically call out Fortran and MATLAB as predecessors in this area.
@@ -76,9 +75,9 @@ Solves the dual-language problem. From ThinkJulia.jl:
 
 -   Easy to write yet fast
 
--   Full unicode support, e.g., this is valid code: ![](img/unicode.png)
+-   Full unicode support, e.g., this is valid code: `α = α + 1`
 
--   excellent package manager with powerful libraries
+-   Excellent package manager with powerful libraries
 
 -   Juptyer notebooks (for dynamic documents and reproducible research)
 
@@ -104,7 +103,7 @@ Goal of the first part: Get the look&feel of Julia
 
 Should look familiar to R and python users
 
-```{julia eval=TRUE, echo=TRUE}
+```{julia vars, eval=TRUE, echo=TRUE}
 a = 1.0
 a + 10
 α = 1 # type \alpha and hit TAB
@@ -117,28 +116,27 @@ a += 2 # update operator
 
 ## Types
 
-```{julia eval=TRUE, echo=TRUE}
-a::Int = 1
-b::UInt = 2
-c::UInt16 = 3
+```{julia types, eval=TRUE, echo=TRUE}
+c::Int = 1
+d::UInt = 2
+e::UInt16 = 3
 ```
 
-```{julia eval=FALSE, echo=TRUE}
+```{julia typesfail, eval=FALSE, echo=TRUE}
 # Should fail -- why?:
-a = a + 0.1
-b = -1
+c = c + 0.1
+d = -1
 ```
-
 
 ## Loops
 
-```{julia eval=TRUE, echo=TRUE}
+```{julia loops, eval=TRUE, echo=TRUE}
 for number in 1:4
     println("I am at number $number")
 end
 ```
 
-or fancy using (\in with TAB):
+or fancy using (\\in with Tab):
 
 ```{julia eval=TRUE, echo=TRUE}
 for number ∈ 1:4
@@ -172,6 +170,8 @@ times2(1)
 times2("hallo") # should fail
 ```
 
+## More Functions
+
 Now we use typed arguments to define variants of our functions depending on the input types (multiple dispatch):
 
 ```{julia eval=TRUE, echo=TRUE}
@@ -188,9 +188,20 @@ times2(1.0+2im)
 x = [1, 2, 3, 4]
 x[1]
 x[end]
+x[end-1]
+```
 
+
+## Sequences
+
+Sequences are stored as abstract representations (memory efficiency!)
+
+```{julia eval=TRUE, echo=TRUE}
 y = 1:10
 y
+
+y[end-1]
+
 collect(y)
 ```
 
@@ -198,14 +209,14 @@ collect(y)
 
 For more functionality, install packages from the registry:
 
-```{julia eval=FALSE, echo=TRUE}
+```{julia install, eval=FALSE, echo=TRUE}
 using Pkg
 Pkg.add(["StructuralEquationModels", "CSV", "Distributions", "DataFrames", "StableRNGs"])
 ```
 
 ## Data Frames
 
-```{julia eval=TRUE, echo=TRUE}
+```{julia dataframe, eval=TRUE, echo=TRUE}
 using DataFrames
 
 df = DataFrame( age = 1:10,
@@ -221,24 +232,25 @@ print(df)
 
 Sort an array (and return the sorted version):
 
-```{julia eval=TRUE, echo=TRUE}
+```{julia sort, eval=TRUE, echo=TRUE}
+#| results: 'hide'
 sort(df)
 
 ```
 
 Sort an array and replace the original with the sorted version (exclamation mark indicates modification):
 
-```{julia eval=TRUE, echo=TRUE}
-
+```{julia sort2, eval=TRUE, echo=TRUE}
+#| results: 'hide'
 sort!(df)
 
 ```
 
 ## Loading Data
 
-```{julia eval=FALSE, echo=TRUE}
+```{julia loadcsv,eval=TRUE, echo=TRUE}
 using CSV, DataFrames
-data = CSV.read("my_datafile.tsv", DataFrames.DataFrame;
+data = CSV.read("data/happy.tsv", DataFrames.DataFrame;
 # ensures column names are valid Julia symbols
 normalizenames = true,
 # expect comma-separated values
@@ -256,21 +268,34 @@ ignorerepeated = true
 -   They are immutable labels
 -   Column names are symbols
 
-```{julia}
+```{julia rename,eval=TRUE, echo=TRUE}
 rename!(df, :happiness => :life_satisfaction)
 ```
 
 ## Plots
 
-```{julia}
+```{julia plot,eval=TRUE, echo=TRUE}
 using Plots
 plot(df.age, df.life_satisfaction)
 ```
 
+## More Plotting
+
 Add to the plot using the modification operator
 
-```{julia}
+```{julia plotmore,eval=TRUE, echo=TRUE}
 plot!(df.age, df.age)
+```
+
+# It's your turn!
+
+## Installation
+
+Step 0: Install some packages
+
+```{julia installagain, eval=FALSE, echo=TRUE}
+using Pkg
+Pkg.add(["StructuralEquationModels", "CSV", "Distributions", "DataFrames", "StableRNGs"])
 ```
 
 ## Exercise
@@ -283,10 +308,10 @@ plot!(df.age, df.age)
 
 ## Solution
 
-```{julia}
+```{julia csv,eval=FALSE, echo=TRUE}
 
 using CSV, DataFrames
-data = CSV.read("exercise_sheet1.csv", DataFrames.DataFrame;
+data = CSV.read("data/exercise_sheet1.csv", DataFrames.DataFrame;
 # ensures column names are valid Julia symbols
 normalizenames = true,
 # expect comma-separated values
@@ -300,7 +325,7 @@ ignorerepeated = true
 
 ## Solution Cont'd
 
-```{julia}
+```{julia solution, eval=FALSE, echo=TRUE}
 print(data)
 mean(data.age)
 mean.(data) #use broadcast operator
@@ -308,4 +333,3 @@ plot(data[:,1], data[:,2])
 ```
 
 # Move on to PART II of the workshop
-
