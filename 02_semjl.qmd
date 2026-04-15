@@ -19,24 +19,102 @@ library(JuliaCall)
 julia_setup(JULIA_HOME = 'C:\\Users\\andreas.brandmaier\\AppData\\Local\\Programs\\Julia-1.11.7\\bin')
 ```
 
-## Quarto
+```{julia eval=TRUE, echo=FALSE}
 
-Goal of the second part: Get familiar with "StructuralEquationModel.jl” (Ernst, Stukalov, Brandmaier, & Peikert, Submitted)
+using CSV, DataFrames
+data = CSV.read("data/lgcm.csv", DataFrames.DataFrame;
+# ensures column names are valid Julia symbols
+normalizenames = true,
+# expect comma-separated values
+delim = ',',
+# handle missing data
+missingstring = ["", "NA", "NaN"],
+# ignore duplicate column delimiters
+ignorerepeated = true
+)
+```
+
+## Goal
+
+::: callout-tip
+Get familiar with "StructuralEquationModel.jl” (Ernst, Stukalov, Brandmaier, & Peikert, Submitted)
+:::
 
 ## Linear Latent Growth Curve Model
 
+- Linear latent growth curve models assume linear change over time
+- Our goal is to model individual differences in both level and change
+- Level and change can be associated
+- Residual errors in the measurement model should capture deviations from this linearity and measurement error
+
+## Step-By-Step - Part I
 
 ::::: columns
 ::: {.column width="50%"}
-![](img/stepbystep/lgcm-stepbystep-V2-1.pdf)Step-By-Step
-
-
+![](img/stepbystep/lgcm-stepbystep-V2-1_page_1.png)
 :::
 
 ::: {.column width="50%"}
 ![](img/stepbystep/sim1.png)
 :::
 :::::
+
+## Step-By-Step - Part II
+
+::::: columns
+::: {.column width="50%"}
+![](img/stepbystep/lgcm-stepbystep-V2-2_page_1.png)
+:::
+
+::: {.column width="50%"}
+![](img/stepbystep/sim2.png)
+:::
+:::::
+
+## Step-By-Step - Part III
+
+::::: columns
+::: {.column width="50%"}
+![](img/stepbystep/lgcm-stepbystep-V2-3_page_1.png)
+:::
+
+::: {.column width="50%"}
+![](img/stepbystep/sim3.png)
+:::
+:::::
+
+## Step-By-Step - Part IV
+
+::::: columns
+::: {.column width="50%"}
+![](img/stepbystep/lgcm-stepbystep-V2-4_page_1.png)
+:::
+
+::: {.column width="50%"}
+![](img/stepbystep/sim4.png)
+:::
+:::::
+
+# Parameter Estimates
+
+
+::::: columns
+::: {.column width="50%"}
+![](img/stepbystep/lgcm-stepbystep-V2-4_page_1.png)
+:::
+
+::: {.column width="50%"}
+- Intercept mean: Average level at baseline
+- Intercept variance: Individual differences at baseline
+- Slope mean: Average change per „one unit“ of time
+- Slope variance: Individual differences in change
+- Intercept-Slope covariance: Associations of differences in level and change (often rescaled as correlation)
+- Residual error variance: Measurement error + misspecification
+:::
+:::::
+
+
+# StructuralEquationModels.jl
 
 ## Load the package
 
@@ -48,10 +126,13 @@ using StructuralEquationModels
 
 ## Define variables
 
-Define symbols for all observed and all latent variables:
+Define symbols (remember that symbols start with a colon) for all observed and all latent variables:
 
 ```{julia eval=TRUE, echo=TRUE}
+# five observed time points
 obs = [:y1, :y2, :y3, :y4, :y5]
+
+# intercept and slope (latent)
 lat = [:i, :s]
 ```
 
@@ -59,31 +140,31 @@ lat = [:i, :s]
 
 Regression (with free parameter):
 
-```{julia eval=FALSE}
+```{julia eval=FALSE, echo=TRUE}
 {a → b #type \rightarrow or \leftarrow}
 ```
 
 Covariance (with free parameter)
 
-```         
+```{julia eval=FALSE, echo=TRUE}
 a ↔ b #type \\leftrightarrow
 ```
 
 Variance
 
-```         
+```{julia eval=FALSE, echo=TRUE}
 a ↔ a
 ```
 
 ## One-to-one and many-to-many mappings
 
-```         
+```{julia eval=FALSE, echo=TRUE}
 [a b] → [c d]
 ```
 
 evaluates to `a → c, b → d`.
 
-```         
+```{julia eval=FALSE, echo=TRUE}
 [a b] ⇒ [c d]
 ```
 
@@ -91,7 +172,9 @@ is equivalent to saying `a → c, a → d, b → c, b → d`.
 
 ## Define a graph
 
-```{julia empty, eval=FALSE}
+Graphs are defined using a Stenograph macro
+
+```{julia empty, eval=FALSE, echo=TRUE}
 graph = @StenoGraph begin
 
    ...
@@ -123,7 +206,8 @@ end
 
 ## Parameter Table
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
+
 partable = ParameterTable(
     graph,
     latent_vars   = lat,
@@ -133,7 +217,8 @@ partable = ParameterTable(
 
 ## Model
 
-```{julia modelsem, eval=FALSE}
+```{julia eval=TRUE, echo=TRUE}
+
 model = Sem(
     specification = partable,
     data          = data
@@ -142,26 +227,30 @@ model = Sem(
 
 ## Fit
 
-```{julia fitmodel, eval=FALSE}
+```{julia eval=TRUE, echo=TRUE}
+
 fitted = fit(model)
 ```
 
 ## Obtaining Fit Measures
 
-```{julia fitmeasures, eval=FALSE}
+```{julia eval=TRUE, echo=TRUE}
+
 fit_measures(fitted)
 ```
 
 ## Getting Parameters
 
-```{julia updatepar, eval=FALSE}
+```{julia eval=TRUE, echo=TRUE}
+
 update_estimate!(partable, fitted)
 details(partable)
 ```
 
 ## Comparing two models
 
-```{julia lrt, eval=FALSE}
+```{julia eval=TRUE, echo=TRUE}
+
 
 Δdev = minus2ll(fitted_h0) - minus2ll(fitted)
 Δdf  = dof(fitted_h0) - dof(fitted)
