@@ -104,7 +104,7 @@ Goal of the first part: Get the look&feel of Julia
 
 Should look familiar to R and python users
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 a = 1.0
 a + 10
 α = 1 # type \alpha and hit TAB
@@ -117,14 +117,14 @@ a += 2 # update operator
 
 ## Types
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 a::Int = 1
 b::UInt = 2
 c::UInt16 = 3
 ```
 
-```{julia}
-# Should fail:
+```{julia eval=FALSE, echo=TRUE}
+# Should fail -- why?:
 a = a + 0.1
 b = -1
 ```
@@ -132,7 +132,7 @@ b = -1
 
 ## Loops
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 for number in 1:4
     println("I am at number $number")
 end
@@ -140,7 +140,7 @@ end
 
 or fancy using (\in with TAB):
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 for number ∈ 1:4
     println("I am at number $number")
 end
@@ -150,7 +150,7 @@ end
 
 Iterating over multiple things:
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 list_a = 1:4
 list_b = ["John", "Paul", "George", "Ringo"]
 
@@ -161,17 +161,20 @@ end
 
 ## Functions
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 
 times2(x) = 2 * x
 
 times2(1)
+```
+
+```{julia eval=FALSE, echo=TRUE}
 times2("hallo") # should fail
 ```
 
 Now we use typed arguments to define variants of our functions depending on the input types (multiple dispatch):
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 times2(x::Number) = x * x
 times2(x::String) = x * x
 
@@ -181,7 +184,7 @@ times2(1.0+2im)
 
 ## Vectors
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 x = [1, 2, 3, 4]
 x[1]
 x[end]
@@ -195,14 +198,14 @@ collect(y)
 
 For more functionality, install packages from the registry:
 
-```{julia}
+```{julia eval=FALSE, echo=TRUE}
 using Pkg
 Pkg.add(["StructuralEquationModels", "CSV", "Distributions", "DataFrames", "StableRNGs"])
 ```
 
 ## Data Frames
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 using DataFrames
 
 df = DataFrame( age = 1:10,
@@ -218,15 +221,14 @@ print(df)
 
 Sort an array (and return the sorted version):
 
-```{julia}
-
+```{julia eval=TRUE, echo=TRUE}
 sort(df)
 
 ```
 
 Sort an array and replace the original with the sorted version (exclamation mark indicates modification):
 
-```{julia}
+```{julia eval=TRUE, echo=TRUE}
 
 sort!(df)
 
@@ -234,7 +236,7 @@ sort!(df)
 
 ## Loading Data
 
-```{julia}
+```{julia eval=FALSE, echo=TRUE}
 using CSV, DataFrames
 data = CSV.read("my_datafile.tsv", DataFrames.DataFrame;
 # ensures column names are valid Julia symbols

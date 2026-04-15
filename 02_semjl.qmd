@@ -20,6 +20,7 @@ julia_setup(JULIA_HOME = 'C:\\Users\\andreas.brandmaier\\AppData\\Local\\Program
 ```
 
 ```{julia eval=TRUE, echo=FALSE}
+#| results: 'hide'
 
 using CSV, DataFrames
 data = CSV.read("data/lgcm.csv", DataFrames.DataFrame;
@@ -31,27 +32,28 @@ delim = ',',
 missingstring = ["", "NA", "NaN"],
 # ignore duplicate column delimiters
 ignorerepeated = true
-)
+);
 ```
 
 ## Goal
 
-::: callout-tip
+::: callout
 Get familiar with "StructuralEquationModel.jl” (Ernst, Stukalov, Brandmaier, & Peikert, Submitted)
 :::
 
 ## Linear Latent Growth Curve Model
 
-- Linear latent growth curve models assume linear change over time
-- Our goal is to model individual differences in both level and change
-- Level and change can be associated
-- Residual errors in the measurement model should capture deviations from this linearity and measurement error
+-   Linear latent growth curve models assume linear change over time
+-   Our goal is to model individual differences in both level and change
+-   Level and change can be associated
+-   Residual errors in the measurement model should capture deviations from this linearity and measurement error
+-   Change can be associated with antecedents, consequences, or changes in other domains
 
 ## Step-By-Step - Part I
 
 ::::: columns
 ::: {.column width="50%"}
-![](img/stepbystep/lgcm-stepbystep-V2-1_page_1.png)
+![](img/stepbystep/lgcm-stepbystep-V2-2_page_1.png)
 :::
 
 ::: {.column width="50%"}
@@ -63,19 +65,7 @@ Get familiar with "StructuralEquationModel.jl” (Ernst, Stukalov, Brandmaier, &
 
 ::::: columns
 ::: {.column width="50%"}
-![](img/stepbystep/lgcm-stepbystep-V2-2_page_1.png)
-:::
-
-::: {.column width="50%"}
-![](img/stepbystep/sim2.png)
-:::
-:::::
-
-## Step-By-Step - Part III
-
-::::: columns
-::: {.column width="50%"}
-![](img/stepbystep/lgcm-stepbystep-V2-3_page_1.png)
+![](img/stepbystep/lgcm-stepbystep-V2-4_page_1.png)
 :::
 
 ::: {.column width="50%"}
@@ -83,11 +73,11 @@ Get familiar with "StructuralEquationModel.jl” (Ernst, Stukalov, Brandmaier, &
 :::
 :::::
 
-## Step-By-Step - Part IV
+## Step-By-Step - Part III
 
 ::::: columns
 ::: {.column width="50%"}
-![](img/stepbystep/lgcm-stepbystep-V2-4_page_1.png)
+![](img/stepbystep/lgcm-stepbystep-V2-5_page_1.png)
 :::
 
 ::: {.column width="50%"}
@@ -95,8 +85,19 @@ Get familiar with "StructuralEquationModel.jl” (Ernst, Stukalov, Brandmaier, &
 :::
 :::::
 
-# Parameter Estimates
+## Step-By-Step - Part IV
 
+::::: columns
+::: {.column width="50%"}
+![](img/stepbystep/lgcm-stepbystep-V2-6_page_1.png)
+:::
+
+::: {.column width="50%"}
+![](img/stepbystep/sim5.png)
+:::
+:::::
+
+## Parameter Estimates {.smaller}
 
 ::::: columns
 ::: {.column width="50%"}
@@ -104,23 +105,33 @@ Get familiar with "StructuralEquationModel.jl” (Ernst, Stukalov, Brandmaier, &
 :::
 
 ::: {.column width="50%"}
-- Intercept mean: Average level at baseline
-- Intercept variance: Individual differences at baseline
-- Slope mean: Average change per „one unit“ of time
-- Slope variance: Individual differences in change
-- Intercept-Slope covariance: Associations of differences in level and change (often rescaled as correlation)
-- Residual error variance: Measurement error + misspecification
+-   Intercept mean: Average level at baseline
+-   Intercept variance: Individual differences at baseline
+-   Slope mean: Average change per „one unit“ of time
+-   Slope variance: Individual differences in change
+-   Intercept-Slope covariance: Associations of differences in level and change (often rescaled as correlation)
+-   Residual error variance: Measurement error + misspecification
 :::
 :::::
 
-
 # StructuralEquationModels.jl
+
+## Workflow
+
+-   Load package
+-   Load data (see Part I)
+-   Define all variables
+-   Specify the model as graph with relations between variables
+-   Translate the graph to a parameter table
+-   Create a model object from the parameter table and the data
+-   Fit the model
+-   Inspect the model
 
 ## Load the package
 
 This may take some time on first loading:
 
-```{julia eval=TRUE, echo=TRUE}
+```{julia loadpack, eval=TRUE, echo=TRUE}
 using StructuralEquationModels
 ```
 
@@ -141,19 +152,43 @@ lat = [:i, :s]
 Regression (with free parameter):
 
 ```{julia eval=FALSE, echo=TRUE}
-{a → b #type \rightarrow or \leftarrow}
+a → b #type \rightarrow or \leftarrow}
 ```
 
 Covariance (with free parameter)
 
 ```{julia eval=FALSE, echo=TRUE}
-a ↔ b #type \\leftrightarrow
+a ↔ b #type \leftrightarrow
 ```
 
 Variance
 
 ```{julia eval=FALSE, echo=TRUE}
 a ↔ a
+```
+
+Means (using a constant one):
+
+```{julia eval=FALSE, echo=TRUE}
+Symbol(1) → [a b c]
+Symbol(1) → a + b # or lavaan style
+Symbol(1) → _(obs) # refer to a variable outside the graph notation
+```
+
+## Fix parameters at values
+
+Using `fixed(...)` with a given value
+
+For example, this fixes the path from `x` to `y` at a value of one:
+
+```{julia eval=FALSE, echo=TRUE}
+x → fixed(1)*y 
+```
+
+Or, this fixes the covariance of `a` and `b` to zero:
+
+```{julia eval=FALSE, echo=TRUE}
+a ↔ fixed(0)*b
 ```
 
 ## One-to-one and many-to-many mappings
@@ -165,7 +200,7 @@ a ↔ a
 evaluates to `a → c, b → d`.
 
 ```{julia eval=FALSE, echo=TRUE}
-[a b] ⇒ [c d]
+[a b] ⇒ [c d] # type \\Rightarrow (uppercase 'R')
 ```
 
 is equivalent to saying `a → c, a → d, b → c, b → d`.
@@ -182,28 +217,29 @@ graph = @StenoGraph begin
 end
 ```
 
+## LGCM Graph (Onyx)
+
+![](img/LGCM.png)
+
 ## Define a graph
 
-```{julia eval=TRUE, echo=TRUE}
+```{julia defgraph, eval=TRUE, echo=TRUE}
+graph = \@StenoGraph begin
+\# Intercept factor: all loadings fixed to 1
+i → fixed(1)\*y1 + fixed(1)\*y2 + fixed(1)\*y3 + fixed(1)\*y4
 
+\# Slope factor: linear time scores
+s → fixed(0)\*y1 + fixed(1)\*y2 + fixed(2)\*y3 + fixed(3)\*y4
 
-graph = @StenoGraph begin
-    # Intercept factor: all loadings fixed to 1
-    i → fixed(1)*y4 + fixed(1)*y7 + fixed(1)*y8 + fixed(1)*y10
+\# Residual variances (free) and latent (co)variances (free)
+\_(obs) ↔ \_(obs) \# variances for observed variables
+\_(lat) ⇔ \_(lat) \# variances + covariance for latent factors
 
-    # Slope factor: linear time scores
-    s → fixed(0)*y4 + fixed(1)*y7 + fixed(2)*y8 + fixed(3)*y10
-
-    # Residual variances (free) and latent (co)variances (free)
-    _(obs) ↔ _(obs)     # variances for observed variables
-    _(lat) ⇔ _(lat)     # variances + covariance for latent factors
-
-    # Latent means (estimate μ_i and μ_s); 
-    # observed means fixed to 0 by omission
-    Symbol(1) → i + s
+\# Latent means (estimate μ_i and μ_s);
+\# observed means fixed to 0 by omission
+Symbol(1) → i + s
 end
 ```
-
 ## Parameter Table
 
 ```{julia eval=TRUE, echo=TRUE}
@@ -244,12 +280,19 @@ fit_measures(fitted)
 ```{julia eval=TRUE, echo=TRUE}
 
 update_estimate!(partable, fitted)
+```
+
+## Getting Parameters (Cont'd)
+
+```{julia eval=TRUE, echo=TRUE}
 details(partable)
 ```
 
 ## Comparing two models
 
-```{julia eval=TRUE, echo=TRUE}
+Assuming, we set up a nested model `fitted_h0`
+
+```{julia eval=FALSE, echo=TRUE}
 
 
 Δdev = minus2ll(fitted_h0) - minus2ll(fitted)
