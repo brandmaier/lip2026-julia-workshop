@@ -12,6 +12,8 @@ format:
       slide-number: true
       preview-links: true
       embed-resources: true
+
+
 editor: visual
 ---
 
@@ -38,13 +40,13 @@ generate_svg(qr_code(link), here::here("img/", "qr_talk.svg"), foreground = seco
 ## Julia
 
 ::::: columns
-::: {.column width="50%"}
+::: {.column width="70%"}
 Find Julia here: <https://julialang.org/>
 
 Workshop Materials: <https://github.com/brandmaier/lip2026-julia-workshop>
 :::
 
-::: {.column width="50%"}
+::: {.column width="30%"}
 ![](img/qr_talk.svg)
 :::
 :::::
@@ -191,7 +193,24 @@ x[end]
 x[end-1]
 ```
 
+## Broadcasting
 
+Some operators and functions allow for _broadcasting_, which basically is applying it to every element:
+
+This fails - why?
+```{julia eval=FALSE, echo=TRUE}
+[1 2 3 4] + 1
+```
+
+With broadcasting
+```{julia eval=TRUE, echo=TRUE}
+[1 2 3 4] .+ 1
+```
+
+or, for another instance:
+```{julia eval=TRUE, echo=TRUE}
+log.([1 2 3])
+```
 ## Sequences
 
 Sequences are stored as abstract representations (memory efficiency!)
@@ -219,7 +238,7 @@ Pkg.add(["StructuralEquationModels", "CSV", "Distributions", "DataFrames", "Stab
 ```{julia dataframe, eval=TRUE, echo=TRUE}
 using DataFrames
 
-df = DataFrame( age = 1:10,
+df = DataFrame( age = 51:60,
        happiness = ((20 .* randn(10)).+50) )
 
 df.age
@@ -254,7 +273,7 @@ data = CSV.read("data/happy.tsv", DataFrames.DataFrame;
 # ensures column names are valid Julia symbols
 normalizenames = true,
 # expect comma-separated values
-delim = '\t',
+delim = ' ',
 # handle missing data
 missingstring = ["", "NA", "NaN"],
 # ignore duplicate column delimiters
