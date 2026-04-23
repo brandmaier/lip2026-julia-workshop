@@ -41,10 +41,12 @@ generate_svg(qr_code(link), here::here("img/", "qr_talk.svg"), foreground = seco
 
 ::::: columns
 ::: {.column width="70%"}
-Find Julia here: <https://julialang.org/>
 
 Workshop Materials: <https://github.com/brandmaier/lip2026-julia-workshop>
 :::
+
+Julia Online Sandbox:
+<https://www.coderunbox.com/playground/playcode-julia>
 
 ::: {.column width="30%"}
 ![](img/qr_talk.svg)
@@ -177,7 +179,7 @@ times2("hallo") # should fail
 Now we use typed arguments to define variants of our functions depending on the input types (multiple dispatch):
 
 ```{julia eval=TRUE, echo=TRUE}
-times2(x::Number) = x * x
+times2(x::Number) = x * 2
 times2(x::String) = x * x
 
 times2("hallo")
@@ -240,7 +242,11 @@ using DataFrames
 
 df = DataFrame( age = 51:60,
        happiness = ((20 .* randn(10)).+50) )
+```
 
+## Data Frames
+
+```{julia dataframe2, eval=TRUE, echo=TRUE}
 df.age
 df[:, 1]
 
@@ -273,7 +279,7 @@ data = CSV.read("data/happy.tsv", DataFrames.DataFrame;
 # ensures column names are valid Julia symbols
 normalizenames = true,
 # expect comma-separated values
-delim = ' ',
+delim = '\t',
 # handle missing data
 missingstring = ["", "NA", "NaN"],
 # ignore duplicate column delimiters
@@ -303,19 +309,39 @@ plot(df.age, df.life_satisfaction)
 Add to the plot using the modification operator
 
 ```{julia plotmore,eval=TRUE, echo=TRUE}
-plot!(df.age, df.age)
+#plot!(df.age, df.age)
+```
+
+## Symbolic Computation
+
+```{julia sym,eval=FALSE, echo=TRUE}
+using Symbolics, Nemo
+
+@variables x a b
+expand( (x + a) * (x + b) )
+symbolic_solve ( 4*x^2 - 2*x - 1)
+
 ```
 
 # It's your turn!
 
 ## Installation
 
-Step 0: Install some packages
+Find Julia here: <https://julialang.org/>
+
+Step 0: Hello World
 
 ```{julia installagain, eval=FALSE, echo=TRUE}
+print("Hello World!")
+```
+
+Step 00: Install some packages
+
+```{julia installagain2, eval=FALSE, echo=TRUE}
 using Pkg
 Pkg.add(["StructuralEquationModels", "CSV", "Distributions", "DataFrames", "StableRNGs"])
 ```
+
 
 ## Exercise
 

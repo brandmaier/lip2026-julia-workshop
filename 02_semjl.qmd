@@ -104,7 +104,7 @@ Get familiar with "StructuralEquationModel.jl” (Ernst, Stukalov, Brandmaier, &
 
 ::::: columns
 ::: {.column width="50%"}
-![](img/stepbystep/lgcm-stepbystep-V2-4_page_1.png)
+![](img/stepbystep/lgcm-stepbystep-V2-6_page_1.png)
 :::
 
 ::: {.column width="50%"}
@@ -131,6 +131,13 @@ Get familiar with "StructuralEquationModel.jl” (Ernst, Stukalov, Brandmaier, &
 -   Inspect the model
 
 ## Load the package
+
+If you have not installed the package yet:
+
+```{julia install, eval=FALSE, echo=TRUE}
+using Pkg
+Pkg.add("StructuralEquationModels")
+```
 
 This may take some time on first loading:
 
@@ -208,6 +215,24 @@ evaluates to `a → c, b → d`.
 
 is equivalent to saying `a → c, a → d, b → c, b → d`.
 
+```{julia eval=FALSE, echo=TRUE}
+[a b] ⇔ [a b] # type \\Rightarrow (uppercase 'R')
+```
+
+is equivalent to saying `a  ↔ a, a  ↔  b, b  ↔  b (, b  ↔ a)`.
+
+## Escaping
+
+If you want to refer to a variable outside the Stenograph, you need to escape its name:
+
+```{julia eval=FALSE, echo=TRUE}
+# not escaped, refers to symbol :obs
+obs ⇔ obs
+
+# escaped, refers to a variable with name obs, which has symbol(s) as content (here: y1, y2, ...)
+_(obs) ⇔  _(obs)
+```
+
 ## Define a graph
 
 Graphs are defined using a Stenograph macro
@@ -243,6 +268,32 @@ _(lat) ⇔ _(lat) # variances + covariance for latent factors
 Symbol(1) → i + s
 end
 ```
+
+## Constraints
+
+The specification above assumes heteroscedastic residual error variances. What about homoscedastic residual error variances?
+
+-\> Constraints
+
+```{julia eval=FALSE}
+label(:e)*y1 ↔ y1
+```
+
+## In our model
+
+```{julia eval=FALSE}
+label(:e)*y1 ↔ y1
+label(:e)*y2 ↔ y2
+label(:e)*y3 ↔ y3
+label(:e)*y4 ↔ y4
+```
+
+Or, use broadcasting with element-wise multiplication of two arrays:
+
+```{julia eval=FALSE}
+_(obs) ↔ [label(:e)].*_(obs)
+```
+
 ## Parameter Table
 
 ```{julia eval=TRUE, echo=TRUE}
@@ -263,6 +314,10 @@ model = Sem(
     data          = data
 )
 ```
+
+## Model
+
+![](img/concept_typed.svg)
 
 ## Fit
 
@@ -309,9 +364,9 @@ p = 1 - cdf(Chisq(Δdf), Δdev)  # p-value for the LRT
 
 This exercise sheet is targeted at social scientists who are interested in modeling change over time in the Julia programming language using the package StructuralEquationModels.jl.
 
-Download the exercise sheet: <https://github.com/brandmaier/lip2026-julia-workshop/blob/main/exercises/exercise_sheet1.pdf>
+Download the exercise sheet: <https://raw.githubusercontent.com/brandmaier/lip2026-julia-workshop/main/exercises/exercise_sheet1.pdf>
 
-Download the data file: <https://github.com/brandmaier/lip2026-julia-workshop/blob/main/exercises/exercise_sheet1.csv>
+Download the data file: <https://raw.githubusercontent.com/brandmaier/lip2026-julia-workshop/main/exercises/exercise_sheet1.csv>
 
 ## Goals
 
