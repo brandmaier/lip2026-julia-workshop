@@ -182,7 +182,7 @@ Means (using a constant one):
 ```{julia eval=FALSE, echo=TRUE}
 Symbol(1) → [a b c]
 Symbol(1) → a + b # or lavaan style
-Symbol(1) → _(obs) # refer to a variable outside the graph notation
+
 ```
 
 ## Fix parameters at values
@@ -275,13 +275,13 @@ The specification above assumes heteroscedastic residual error variances. What a
 
 -\> Constraints
 
-```{julia eval=FALSE}
+```{julia eval=FALSE, echo=TRUE}
 label(:e)*y1 ↔ y1
 ```
 
 ## In our model
 
-```{julia eval=FALSE}
+```{julia eval=FALSE, echo=TRUE}
 label(:e)*y1 ↔ y1
 label(:e)*y2 ↔ y2
 label(:e)*y3 ↔ y3
@@ -290,7 +290,7 @@ label(:e)*y4 ↔ y4
 
 Or, use broadcasting with element-wise multiplication of two arrays:
 
-```{julia eval=FALSE}
+```{julia eval=FALSE, echo=TRUE}
 _(obs) ↔ [label(:e)].*_(obs)
 ```
 
