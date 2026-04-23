@@ -1,3 +1,4 @@
+# Welcome to the LIP Structural Equation Models in Julia workshop
 
 Exercise file:
 
