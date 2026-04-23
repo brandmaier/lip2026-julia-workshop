@@ -275,7 +275,7 @@ sort!(df)
 
 ```{julia loadcsv,eval=TRUE, echo=TRUE}
 using CSV, DataFrames
-data = CSV.read("data/happy.tsv", DataFrames.DataFrame;
+mydata = CSV.read("data/happy.tsv", DataFrames.DataFrame;
 # ensures column names are valid Julia symbols
 normalizenames = true,
 # expect comma-separated values
@@ -309,17 +309,17 @@ plot(df.age, df.life_satisfaction)
 Add to the plot using the modification operator
 
 ```{julia plotmore,eval=TRUE, echo=TRUE}
-#plot!(df.age, df.age)
+plot!(df.age, df.age)
 ```
 
 ## Symbolic Computation
 
-```{julia sym,eval=FALSE, echo=TRUE}
+```{julia sym,eval=TRUE, echo=TRUE}
 using Symbolics, Nemo
 
-@variables x a b
-expand( (x + a) * (x + b) )
-symbolic_solve ( 4*x^2 - 2*x - 1)
+@variables x y z
+expand( (x + y) * (x + z) )
+symbolic_solve( 4*x^2 - 2*x - 1)
 
 ```
 
