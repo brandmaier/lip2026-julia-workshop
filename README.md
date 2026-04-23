@@ -1,3 +1,4 @@
+# Welcome to the LIP Structural Equation Models in Julia workshop
 
 Exercise file:
 
@@ -6,6 +7,6 @@ Exercise file:
 
 Workshop slides:
 
-- [01 Intro to Julia](https://brandmaier.github.io/lip2026-julia-workshop/01_intro.htm)
+- [01 Intro to Julia](https://brandmaier.github.io/lip2026-julia-workshop/01_intro.html)
 - [02 StructuralEquationModels.jl](https://brandmaier.github.io/lip2026-julia-workshop/02_semjl.html)
 
