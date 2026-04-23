@@ -10,3 +10,6 @@ Workshop slides:
 - [01 Intro to Julia](https://brandmaier.github.io/lip2026-julia-workshop/01_intro.html)
 - [02 StructuralEquationModels.jl](https://brandmaier.github.io/lip2026-julia-workshop/02_semjl.html)
 
+Online Julia environment (including StructuralEquationModels.jl) based on mybinder.org (*this takes a couple of minutes to start!*):
+
+[https://mybinder.org/v2/gh/brandmaier/sem-binder-workshop/HEAD](https://mybinder.org/v2/gh/brandmaier/sem-binder-workshop/HEAD)
